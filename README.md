@@ -2,8 +2,6 @@
 
 ## Projeto Final - SkillUp Dynatrace 2026
 
-### Grupo 9
-
 ## Sobre o Projeto
 
 O TravelDreams é uma aplicação web desenvolvida como projeto final do programa SkillUp Dynatrace 2026.
