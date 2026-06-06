@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TravelDreams | Experiências de Viagem Premium</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- VARIÁVEIS E CONFIGURAÇÕES GERAIS --- */
+        :root {
+            --primary: #0077b6;      /* Azul Oceano */
+            --secondary: #00b4d8;    /* Verde Água */
+            --accent: #ff9e00;       /* Laranja Destaque */
+            --light-bg: #f0f4f8;     /* Pastel suave */
+            --white: #ffffff;
+            --dark: #1d3557;
+            --text: #457b9d;
+            --glass: rgba(255, 255, 255, 0.7);
+            --shadow: 0 15px 35px rgba(0,0,0,0.1);
+            --transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--dark);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        /* --- LOGIC: MULTI-PAGE SANS JS --- */
+        .page-content {
+            display: none; /* Esconde todas as seções por padrão */
+            animation: fadeIn 0.8s ease;
+        }
+
+        /* Seção visível por padrão (Home) ou quando clicada */
+        #home:target, #destinos:target, #pacotes:target, #sobre:target, #contato:target {
+            display: block;
+        }
+
+        /* Se não houver target (página inicial ao abrir) */
+        #home { display: block; }
+        :target ~ #home { display: none; } /* Esconde home se outra for selecionada */
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- NAVBAR --- */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 1.5rem 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 1.8rem;
+            color: var(--primary);
+            letter-spacing: -1px;
+        }
+
+        .logo span { color: var(--accent); }
+
+        .nav-links { display: flex; gap: 2.5rem; align-items: center; }
+        .nav-links a {
+            font-weight: 500;
+            font-size: 0.95rem;
+            position: relative;
+            color: var(--dark);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--secondary);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after { width: 100%; }
+
+        .btn-premium {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white !important;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            box-shadow: 0 10px 20px rgba(0, 119, 182, 0.2);
+            transition: var(--transition);
+        }
+
+        .btn-premium:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(0, 119, 182, 0.3);
+        }
+
+        /* Menu Mobile Toggle */
+        #menu-toggle { display: none; }
+        .menu-icon { display: none; cursor: pointer; font-size: 1.5rem; }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(45deg, rgba(29, 53, 87, 0.7), rgba(0, 180, 216, 0.3)), 
+                        url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            padding: 0 5%;
+        }
+
+        .hero-text h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 4.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            animation: slideUp 1s ease;
+        }
+
+        .hero-text p {
+            font-size: 1.3rem;
+            margin-bottom: 2.5rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0.9;
+        }
+
+        /* --- CARDS & GRID --- */
+        .section { padding: 120px 8%; }
+        .section-header { text-align: center; margin-bottom: 4rem; }
+        .section-header h2 { font-size: 2.8rem; font-family: 'Montserrat'; color: var(--dark); }
+        .underline { width: 80px; height: 5px; background: var(--accent); margin: 15px auto; border-radius: 10px; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+        }
+
+        /* Card Moderno */
+        .card {
+            background: var(--white);
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .card:hover { transform: translateY(-15px); }
+
+        .card-img {
+            height: 280px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s ease;
+        }
+
+        .card:hover .card-img img { transform: scale(1.1); }
+
+        .badge {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: var(--accent);
+            color: white;
+            padding: 6px 18px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            z-index: 10;
+        }
+
+        .card-content { padding: 2rem; }
+        .card-content h3 { margin-bottom: 10px; font-size: 1.4rem; }
+        .rating { color: var(--accent); margin-bottom: 15px; font-size: 0.9rem; }
+        .price-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        .price { font-size: 1.5rem; font-weight: 800; color: var(--primary); }
+
+        /* --- SKELETON LOADING FAKE --- */
+        .skeleton {
+            background: #e1e1e1;
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+        /* --- TESTIMONIALS (GLASSMORPHISM) --- */
+        .testimonials {
+            background: linear-gradient(rgba(0, 119, 182, 0.85), rgba(0, 180, 216, 0.85)), url('https://images.unsplash.com/photo-1506929199175-60903ee8f5a9?auto=format&fit=crop&w=1600&q=80');
+            background-size: cover;
+            background-attachment: fixed;
+            padding: 100px 8%;
+            color: white;
+        }
+
+        .testi-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 3rem;
+            border-radius: 30px;
+            text-align: center;
+        }
+
+        .user-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            border: 3px solid var(--accent);
+        }
+
+        /* --- CONTATO & FORMS --- */
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            background: white;
+            padding: 4rem;
+            border-radius: 40px;
+            box-shadow: var(--shadow);
+        }
+
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border: 2px solid #eee;
+            border-radius: 15px;
+            outline: none;
+            transition: var(--transition);
+        }
+        .form-group input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(0, 119, 182, 0.1); }
+
+        /* --- FOOTER --- */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 80px 8% 40px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            margin-bottom: 50px;
+        }
+
+        .footer-col h4 { font-size: 1.2rem; margin-bottom: 1.5rem; color: var(--secondary); }
+        .footer-col ul li { margin-bottom: 12px; opacity: 0.8; transition: 0.3s; }
+        .footer-col ul li:hover { opacity: 1; transform: translateX(5px); }
+
+        .social-icons { display: flex; gap: 1rem; margin-top: 20px; }
+        .social-icons a {
+            width: 45px;
+            height: 45px;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+        .social-icons a:hover { background: var(--accent); transform: rotate(360deg); }
+
+        /* --- WAVE DIVIDER --- */
+        .wave-container {
+            position: relative;
+            width: 100%;
+            height: 100px;
+            background: var(--light-bg);
+            overflow: hidden;
+            line-height: 0;
+        }
+
+        /* --- RESPONSIVIDADE --- */
+        @media (max-width: 992px) {
+            .hero-text h1 { font-size: 3rem; }
+            .nav-links { display: none; } /* Menu hamburguer exigiria checkbox hack aqui */
+            .menu-icon { display: block; }
+            .contact-container { grid-template-columns: 1fr; }
+            .section { padding: 80px 5%; }
+        }
+
+        /* Estilo para a Tabela de Pacotes */
+        .pacote-tabela {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 15px;
+        }
+        .pacote-tabela tr {
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: var(--transition);
+        }
+        .pacote-tabela tr:hover { transform: scale(1.01); }
+        .pacote-tabela td { padding: 25px; border-radius: 15px 0 0 15px; }
+        .pacote-tabela td:last-child { border-radius: 0 15px 15px 0; text-align: right; }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <a href="#home" class="logo">Travel<span>Dreams</span></a>
+        
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#destinos">Destinos</a></li>
+            <li><a href="#pacotes">Pacotes</a></li>
+            <li><a href="#sobre">Sobre</a></li>
+            <li><a href="#contato">Contato</a></li>
+            <li><a href="#destinos" class="btn-premium">Explorar</a></li>
+        </ul>
+        
+        <label for="menu-toggle" class="menu-icon"><i class="fas fa-bars"></i></label>
+    </nav>
+
+    <!-- PAGE: HOME -->
+    <section id="home" class="page-content">
+        <div class="hero">
+            <div class="hero-text">
+                <h1>Explore o Extraordinário</h1>
+                <p>Viaje para os destinos mais exclusivos do mundo com o conforto e a sofisticação que só a TravelDreams oferece.</p>
+                <div style="display: flex; gap: 1rem; justify-content: center;">
+                    <a href="#destinos" class="btn-premium">Ver Destinos</a>
+                    <a href="#pacotes" class="btn-premium" style="background: white; color: var(--dark) !important;">Nossos Pacotes</a>
+                </div>
+            </div>
+        </div>
+
+        <section class="section">
+            <div class="section-header">
+                <h2>Por que viajar conosco?</h2>
+                <div class="underline"></div>
+            </div>
+            <div class="grid">
+                <div class="testi-card" style="background: white; color: var(--dark);">
+                    <i class="fas fa-gem" style="font-size: 3rem; color: var(--primary); margin-bottom: 20px;"></i>
+                    <h3>Experiência VIP</h3>
+                    <p>Curadoria exclusiva de hotéis e acessos prioritários aos pontos turísticos.</p>
+                </div>
+                <div class="testi-card" style="background: white; color: var(--dark);">
+                    <i class="fas fa-shield-alt" style="font-size: 3rem; color: var(--primary); margin-bottom: 20px;"></i>
+                    <h3>Segurança 24h</h3>
+                    <p>Suporte especializado em tempo real durante toda a sua jornada.</p>
+                </div>
+                <div class="testi-card" style="background: white; color: var(--dark);">
+                    <i class="fas fa-leaf" style="font-size: 3rem; color: var(--primary); margin-bottom: 20px;"></i>
+                    <h3>Sustentabilidade</h3>
+                    <p>Compromisso com o turismo consciente e apoio a comunidades locais.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Newsletter Section -->
+        <section class="section" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; text-align: center; border-radius: 50px; margin: 0 8% 100px;">
+            <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">O mundo espera por você</h2>
+            <p style="margin-bottom: 2rem;">Receba roteiros personalizados e ofertas secretas no seu e-mail.</p>
+            <div style="max-width: 600px; margin: 0 auto; display: flex; gap: 10px;">
+                <input type="email" placeholder="Seu melhor e-mail" style="flex: 1; padding: 1.2rem; border-radius: 50px; border: none; outline: none;">
+                <button class="btn-premium" style="background: var(--dark); border: none; cursor: pointer;">Assinar</button>
+            </div>
+        </section>
+    </section>
+
+    <!-- PAGE: DESTINOS -->
+    <section id="destinos" class="page-content">
+        <div class="hero" style="height: 50vh; background-image: url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1600&q=80');">
+            <h1>Destinos Inesquecíveis</h1>
+        </div>
+        
+        <div class="section">
+            <div class="section-header">
+                <h2>Explore os Continentes</h2>
+                <div class="underline"></div>
+            </div>
+
+            <!-- Grid com 12 Cards -->
+            <div class="grid">
+                <!-- Destino 1 -->
+                <div class="card">
+                    <div class="card-img">
+                        <span class="badge">França</span>
+                        <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=600&q=80" alt="Paris">
+                    </div>
+                    <div class="card-content">
+                        <h3>Luzes de Paris</h3>
+                        <div class="rating"><i class="fas fa-star"></i> 5.0 (250 avaliações)</div>
+                        <p>Viva o romance e a cultura na cidade mais charmosa da Europa.</p>
+                        <div class="price-box">
+                            <span class="price">R$ 5.400</span>
+                            <a href="#contato" class="btn-premium" style="padding: 0.5rem 1.2rem; font-size: 0.8rem;">Ver Mais</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Destino 2 -->
+                <div class="card">
+                    <div class="card-img">
+                        <span class="badge">Grécia</span>
+                        <img src="https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=600&q=80" alt="Santorini">
+                    </div>
+                    <div class="card-content">
+                        <h3>Santorini VIP</h3>
+                        <div class="rating"><i class="fas fa-star"></i> 4.9 (180 avaliações)</div>
+                        <p>O pôr do sol mais famoso do mundo visto de uma villa exclusiva.</p>
+                        <div class="price-box">
+                            <span class="price">R$ 8.200</span>
+                            <a href="#contato" class="btn-premium" style="padding: 0.5rem 1.2rem; font-size: 0.8rem;">Ver Mais</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Destino 3 -->
+                <div class="card">
+                    <div class="card-img">
+                        <span class="badge">Maldivas</span>
+                        <img src="https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=600&q=80" alt="Maldivas">
+                    </div>
+                    <div class="card-content">
+                        <h3>Paraíso Particular</h3>
+                        <div class="rating"><i class="fas fa-star"></i> 5.0 (310 avaliações)</div>
+                        <p>Bangalôs sobre as águas cristalinas com serviço all-inclusive premium.</p>
+                        <div class="price-box">
+                            <span class="price">R$ 12.900</span>
+                            <a href="#contato" class="btn-premium" style="padding: 0.5rem 1.2rem; font-size: 0.8rem;">Ver Mais</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Repetir cards para preencher... (simulado) -->
+                <div class="card">
+                    <div class="card-img"><span class="badge">Japão</span><img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=600&q=80"></div>
+                    <div class="card-content"><h3>Tóquio Futurista</h3><p>Tradição e tecnologia em uma jornada gastronômica única.</p><div class="price-box"><span class="price">R$ 9.100</span></div></div>
+                </div>
+                <div class="card">
+                    <div class="card-img"><span class="badge">Suíça</span><img src="https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?auto=format&fit=crop&w=600&q=80"></div>
+                    <div class="card-content"><h3>Alpes Suíços</h3><p>Esqui e luxo nas montanhas cobertas de neve eterna.</p><div class="price-box"><span class="price">R$ 10.500</span></div></div>
+                </div>
+                <div class="card">
+                    <div class="card-img"><span class="badge">Egito</span><img src="https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?auto=format&fit=crop&w=600&q=80"></div>
+                    <div class="card-content"><h3>Mistérios do Nilo</h3><p>Um cruzeiro de luxo pela história da humanidade.</p><div class="price-box"><span class="price">R$ 6.800</span></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PAGE: PACOTES -->
+    <section id="pacotes" class="page-content">
+        <div class="hero" style="height: 50vh; background-image: url('https://images.unsplash.com/photo-1436491865332-7a61a109c0f3?auto=format&fit=crop&w=1600&q=80');">
+            <h1>Pacotes Exclusivos</h1>
+        </div>
+        <div class="section">
+            <div class="section-header">
+                <h2>Ofertas da Estação</h2>
+                <div class="underline"></div>
+            </div>
+            
+            <table class="pacote-tabela">
+                <tr>
+                    <td>
+                        <strong style="color: var(--primary);">Tour Europa Imperial</strong><br>
+                        <small>15 Dias | Paris, Viena, Praga</small>
+                    </td>
+                    <td><i class="fas fa-plane"></i> Incluído</td>
+                    <td><i class="fas fa-hotel"></i> 5 Estrelas</td>
+                    <td><span class="badge" style="position: static; background: var(--secondary);">MAIS VENDIDO</span></td>
+                    <td>
+                        <span class="price">R$ 14.200</span><br>
+                        <a href="#contato" style="color: var(--primary); font-weight: 700;">Reservar</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong style="color: var(--primary);">Expedição Safari</strong><br>
+                        <small>10 Dias | África do Sul & Botsuana</small>
+                    </td>
+                    <td><i class="fas fa-plane"></i> Incluído</td>
+                    <td><i class="fas fa-campground"></i> Luxury Lodge</td>
+                    <td><span class="badge" style="position: static; background: #e63946;">ÚLTIMAS VAGAS</span></td>
+                    <td>
+                        <span class="price">R$ 18.500</span><br>
+                        <a href="#contato" style="color: var(--primary); font-weight: 700;">Reservar</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </section>
+
+    <!-- PAGE: SOBRE -->
+    <section id="sobre" class="page-content">
+        <div class="hero" style="height: 50vh; background-image: url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80');">
+            <h1>Nossa História</h1>
+        </div>
+        <div class="section">
+            <div class="contact-container">
+                <div>
+                    <h2 style="font-family: Montserrat; font-size: 2.5rem; margin-bottom: 1.5rem;">Uma década realizando sonhos.</h2>
+                    <p>A TravelDreams nasceu da paixão por explorar o desconhecido com elegância. Hoje, somos referência em turismo premium, atendendo mais de 50.000 clientes anualmente.</p>
+                    <br>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div style="padding: 20px; background: var(--light-bg); border-radius: 20px; text-align: center;">
+                            <h3 style="color: var(--primary); font-size: 2rem;">+50</h3>
+                            <p>Países</p>
+                        </div>
+                        <div style="padding: 20px; background: var(--light-bg); border-radius: 20px; text-align: center;">
+                            <h3 style="color: var(--primary); font-size: 2rem;">100%</h3>
+                            <p>Seguro</p>
+                        </div>
+                    </div>
+                </div>
+                <img src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=800&q=80" style="width: 100%; border-radius: 30px; box-shadow: var(--shadow);">
+            </div>
+        </div>
+    </section>
+
+    <!-- PAGE: CONTATO -->
+    <section id="contato" class="page-content">
+        <div class="hero" style="height: 50vh; background-image: url('https://images.unsplash.com/photo-1423666639041-f56000c27a9a?auto=format&fit=crop&w=1600&q=80');">
+            <h1>Fale Conosco</h1>
+        </div>
+        <div class="section">
+            <div class="contact-container">
+                <div>
+                    <h2>Envie uma mensagem</h2>
+                    <p style="margin-bottom: 2rem;">Nossos consultores premium estão prontos para montar seu roteiro.</p>
+                    <form>
+                        <div class="form-group">
+                            <label>Nome Completo</label>
+                            <input type="text" placeholder="Como podemos te chamar?">
+                        </div>
+                        <div class="form-group">
+                            <label>E-mail</label>
+                            <input type="email" placeholder="Seu e-mail corporativo ou pessoal">
+                        </div>
+                        <div class="form-group">
+                            <label>Sua Mensagem</label>
+                            <textarea rows="5" placeholder="Conte-nos sobre a viagem dos seus sonhos..."></textarea>
+                        </div>
+                        <button type="button" class="btn-premium" style="width: 100%; border: none;">Enviar Solicitação</button>
+                    </form>
+                </div>
+                <div>
+                    <h2>Onde estamos</h2>
+                    <div style="width: 100%; height: 300px; background: #eee; border-radius: 20px; margin: 20px 0; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+                         <!-- Fake Map -->
+                        <img src="https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/-46.6559,-23.5596,14,0/800x400?access_token=none" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div style="position: absolute; background: white; padding: 10px 20px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+                            <i class="fas fa-map-marker-alt" style="color: red;"></i> Av. Paulista, 1000 - SP
+                        </div>
+                    </div>
+                    <div style="margin-top: 2rem;">
+                        <p><i class="fas fa-phone-alt" style="color: var(--primary); margin-right: 10px;"></i> 0800 777 9999</p>
+                        <p><i class="fab fa-whatsapp" style="color: #25d366; margin-right: 10px;"></i> (11) 99888-7766</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <a href="#home" class="logo" style="color: white;">Travel<span>Dreams</span></a>
+                <p style="margin-top: 20px; opacity: 0.7;">Redefinindo o conceito de luxo e aventura em cada destino que tocamos.</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Navegação</h4>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#destinos">Destinos</a></li>
+                    <li><a href="#pacotes">Pacotes</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Institucional</h4>
+                <ul>
+                    <li><a href="#sobre">Quem Somos</a></li>
+                    <li><a href="#contato">Carreiras</a></li>
+                    <li><a href="#">Política de Privacidade</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Pagamento Seguro</h4>
+                <div style="display: flex; gap: 10px; font-size: 2rem; opacity: 0.6;">
+                    <i class="fab fa-cc-visa"></i>
+                    <i class="fab fa-cc-mastercard"></i>
+                    <i class="fab fa-cc-apple-pay"></i>
+                </div>
+            </div>
+        </div>
+        <div style="text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px; font-size: 0.85rem; opacity: 0.6;">
+            &copy; 2025 TravelDreams Luxury Travel. Todos os direitos reservados.
+        </div>
+    </footer>
+
+</body>
+</html>
